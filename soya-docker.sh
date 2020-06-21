@@ -54,12 +54,22 @@ elif [[ x"${release}" == x"debian" ]]; then
 fi
 
 install(){
+    uninstall
     install_docker
     start_docker
     install_docker_compose
 }
 
 install_docker() {
+    echo -e "${green}即将安装 docker${plain}"
+    yum remove docker \
+                  docker-client \
+                  docker-client-latest \
+                  docker-common \
+                  docker-latest \
+                  docker-latest-logrotate \
+                  docker-logrotate \
+                  docker-engine
     curl -fsSL https://get.docker.com | bash
     if [[ $? == 0 ]]; then
         echo -e "${green}docker 安装成功${plain}"
@@ -69,6 +79,7 @@ install_docker() {
 }
 
 install_docker_compose() {
+    echo -e "${green}即将安装 docker${plain}"
     curl -L "https://github.com/docker/compose/releases/download/1.25.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     if [[ $? == 0 ]]; then
         echo -e "${green}docker-compose 安装成功${plain}"
@@ -94,14 +105,12 @@ start_docker(){
 uninstall(){
 
     case "${release}" in
-        centos) yum remove docker \
-                  docker-client \
-                  docker-client-latest \
-                  docker-common \
-                  docker-latest \
-                  docker-latest-logrotate \
-                  docker-logrotate \
-                  docker-engine
+        centos) yum remove -y docker-ce \
+                              docker-ce-cli && 
+                rm -rf /var/lib/docker && 
+                rm -rf /var/lib/docker*
+                rm -rf /usr/local/bin/docker-compose
+                echo -e "${green}docker && docker-compose 卸载完成${plain}"
         ;;
         debian) apt-get remove docker docker-engine docker.io containerd runc
         ;;
