@@ -21,5 +21,8 @@
 |ws                |计划中             |
 |ws+tls            |计划中             |
 
+## 一键安装&更新
+```bash <(curl -Ls https://raw.githubusercontent.com/beeij/Docking-at-the-airport/master/install.sh)```
+
 ## 目前进度
 2020-6-25 完成v2board-soga（tcp）对接
