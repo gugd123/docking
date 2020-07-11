@@ -317,7 +317,7 @@ get_forbidden_bit_torrent(){
     if [ -z "${flag}" ];then
         flag=0
     fi
-    case "${num}" in
+    case "${flag}" in
         0) forbidden_bit_torrent=false
         ;;
         1) forbidden_bit_torrent=true
