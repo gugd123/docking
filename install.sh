@@ -145,7 +145,7 @@ version: "3"
 
 services:
   soga:
-    image: sprov065/soga
+    image: sprov065/soga:latest
     environment:
       type: ${type}
       server_type: ${server_type}
@@ -154,6 +154,10 @@ services:
       node_id: ${node_id}
       webapi_mukey: ${webapi_mukey}
       soga_key: ${soga_key}
+      user_conn_limit: ${user_conn_limit}
+      user_speed_limit: ${user_speed_limit}
+      check_interval: ${check_interval}
+      forbidden_bit_torrent: ${forbidden_bit_torrent}
     restart: always
     ports:
       - "${ports}:${ports}"
@@ -299,6 +303,30 @@ get_check_interval(){
     fi
 }
 
+get_forbidden_bit_torrent(){
+    echo -e "
+  ${green}是否禁用BT下载（默认为 否）${plain}
+————————————————
+
+  ${green}0.${plain} 否
+  ${green}1.${plain} 是
+
+————————————————
+ "
+    echo && read -p "是否禁用BT下载（默认为 否）: " flag
+    if [ -z "${flag}" ];then
+        flag=0
+    fi
+    case "${num}" in
+        0) forbidden_bit_torrent=false
+        ;;
+        1) forbidden_bit_torrent=true
+        ;;
+        *) echo -e "${red}请输入正确的数字 [0-1]（默认 否）${plain}"
+        ;;
+    esac
+}
+
 get_basis(){
     get_type
     get_server_type
@@ -310,6 +338,7 @@ get_basis(){
     get_user_conn_limit
     get_user_speed_limit
     get_check_interval
+    get_forbidden_bit_torrent
 }
 
 show_message(){
@@ -326,9 +355,10 @@ show_message(){
   ${green}node_id=${node_id}${plain}
   ${green}ports=${ports}${plain}
   ${green}soga_key=${soga_key}${plain}
-  ${green}get_user_conn_limit=${user_conn_limit}${plain}
-  ${green}get_user_speed_limit=${user_speed_limit}${plain}
-  ${green}get_check_interval=${check_interval}${plain}
+  ${green}user_conn_limit=${user_conn_limit}${plain}
+  ${green}user_speed_limit=${user_speed_limit}${plain}
+  ${green}check_interval=${check_interval}${plain}
+  ${green}forbidden_bit_torrent=${forbidden_bit_torrent}${plain}
 
 ————————————————
     "
